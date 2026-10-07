@@ -1,9 +1,10 @@
-MAXBEM MAC 2.4 — VALIDAÇÃO
+MAXBEM MAC 2.5 — VALIDAÇÃO
 
-34 testes portáveis do servidor e das adaptações Mac: aprovados no Linux.
+35 testes portáveis do servidor e das adaptações Mac: aprovados no Linux.
 Incluem instalação/atualização com chamadas nativas simuladas, preservação do banco e da versão anterior, bloqueio de banco ativo, sessão, CSRF, backup e permissões.
 Shell: bash -n nos instaladores, iniciador e verificador de assinatura.
 ZIP: CRC, manifestos SHA-256 e permissões executáveis verificados.
 Não executados: download oficial (domínio bloqueado na cloud), validação real de assinatura Apple/PSF, instalador nativo, Finder/Gatekeeper, geração real do ícone e impressão física no Mac.
 Nenhuma homologação macOS é afirmada.
 Seleção do runtime: fallback de versão e rejeição sem candidato validado testados com verificação nativa simulada.
+Verificação de assinatura simulada: recursos adicionais permitidos somente no framework; código inválido e identidade incorreta rejeitados. A opção ignore-resources precisa de confirmação em macOS real.

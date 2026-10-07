@@ -4,7 +4,7 @@ Aplicativo local de controle laboratorial de mel, reescrito com Python, SQLite e
 
 ## Mac — download e instalação
 
-- [Mac universal 2.4: Apple Silicon e Intel](downloads/Maxbem_Mac_Universal_v2_4.zip) — macOS 11+.
+- [Mac universal 2.5: Apple Silicon e Intel](downloads/Maxbem_Mac_Universal_v2_5.zip) — macOS 11+.
 - [Guia de instalação, ícone, dados e recuperação](docs/MAC.md).
 - [Segurança e limites da versão Mac](docs/RELATORIO_MAC.md).
 
@@ -30,7 +30,7 @@ Gerar pacote Mac com manifestos de integridade:
 python3 tools/build_macos.py
 ```
 
-O pacote 2.4 substitui o runtime portátil que foi encerrado com `Killed: 9` no Mac do usuário. Usa o Python universal oficial, valida assinatura PSF e aprovação do Gatekeeper antes de abrir seu instalador e verifica o runtime antes de executá-lo. A causa exata do encerramento anterior não foi confirmada. A geração pode ocorrer no Linux; instalação e assinatura precisam ser verificadas em um Mac real. O logo é convertido em `.icns` usando `sips/iconutil` na instalação.
+O pacote 2.5 substitui o runtime portátil que foi encerrado com `Killed: 9` no Mac do usuário. Usa o Python universal oficial, valida assinatura PSF e aprovação do Gatekeeper antes de abrir seu instalador e verifica o runtime antes de executá-lo. A causa exata do encerramento anterior não foi confirmada. A geração pode ocorrer no Linux; instalação e assinatura precisam ser verificadas em um Mac real. O logo é convertido em `.icns` usando `sips/iconutil` na instalação.
 
 ## Histórico Windows
 

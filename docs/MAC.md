@@ -1,9 +1,9 @@
-# Maxbem para Mac — 2.4
+# Maxbem para Mac — 2.5
 
-Um pacote **universal 2.4** atende Apple Silicon e Intel, com macOS 11+. A versão usa Python 3.12, 3.13 ou 3.14 da Python Software Foundation em `/Library/Frameworks/Python.framework/Versions`. Se ele não estiver instalado e verificado, o script baixa o instalador oficial por HTTPS, verifica sua assinatura e aprovação do macOS, e abre a janela nativa. A primeira instalação exige internet e pode exigir uma conta administradora; depois o app funciona offline. Não é necessário baixar Python manualmente.
+Um pacote **universal 2.5** atende Apple Silicon e Intel, com macOS 11+. A versão usa Python 3.12, 3.13 ou 3.14 da Python Software Foundation em `/Library/Frameworks/Python.framework/Versions`. Se ele não estiver instalado e verificado, o script baixa o instalador oficial por HTTPS, verifica sua assinatura e aprovação do macOS, e abre a janela nativa. A primeira instalação exige internet e pode exigir uma conta administradora; depois o app funciona offline. Não é necessário baixar Python manualmente.
 ## Instalar e criar o ícone
 
-1. Baixe `Maxbem_Mac_Universal_v2_4.zip` e extraia em uma pasta nova; não misture com o pacote 2.2.
+1. Baixe `Maxbem_Mac_Universal_v2_5.zip` e extraia em uma pasta nova; não misture com o pacote 2.2.
 2. Extraia todo o ZIP no Finder. Não execute arquivos de dentro do ZIP.
 3. Abra `Instalar Maxbem.command`. O script verifica os hashes, instala o aplicativo em **`~/Applications/Maxbem Laboratório.app`**, gera um ícone `.icns` a partir do logotipo e cria o ícone na Área de Trabalho. Quando solicitado, conclua primeiro a instalação oficial do Python na janela do macOS. Digite a senha do Mac somente nessa janela nativa. O script não captura essa senha. O Python oficial fica disponível para outros aplicativos; o Python interno do sistema não é substituído.
 4. O navegador padrão abre o cadastro do primeiro administrador. Crie uma senha exclusiva com pelo menos 12 caracteres.
@@ -44,4 +44,6 @@ O ZIP e a instalação usam manifestos SHA-256. Isso detecta corrupção e alter
 
 **Validação disponível:** testes portáveis do servidor e das adaptações Mac executados no Linux; ZIP e manifestos verificados. O ambiente cloud não permitiu baixar o instalador de python.org. O download, a validação das assinaturas, o Finder/Gatekeeper, a instalação e o ícone ainda precisam de teste em um Mac real. A aplicação Maxbem continua sem Developer ID/notarização; o runtime oficial não assina o aplicativo Maxbem.
 
-A versão 2.4 detecta Python oficial já instalado nas séries 3.12–3.14, evitando download quando ele passa nas verificações. A versão 2.3 exigia especificamente 3.14.8 e podia tentar um download desnecessário. Erros `Could not resolve host` indicam falha de resolução do domínio na rede do Mac.
+A versão 2.5 detecta Python oficial já instalado nas séries 3.12–3.14, evitando download quando ele passa nas verificações. A versão 2.3 exigia especificamente 3.14.8 e podia tentar um download desnecessário. Erros `Could not resolve host` indicam falha de resolução do domínio na rede do Mac.
+
+A versão 2.5 verifica o código assinado do framework com `codesign --verify --strict --ignore-resources`, pois o Python instalado pode ter recursos adicionados por ensurepip/pip. O executável continua com verificação estrita completa; ambos exigem identidade PSF. A integridade de todos os recursos e pacotes Python do framework não é certificada por essa verificação. Não há remoção de quarentena, alteração de assinatura ou desativação do Gatekeeper.

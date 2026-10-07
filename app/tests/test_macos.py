@@ -107,6 +107,15 @@ class MacPortableTests(unittest.TestCase):
                     with self.assertRaisesRegex(SystemExit,'Encerre'):installer.main(home/'package')
             self.assertFalse((home/'Applications').exists())
 
+    def test_12_framework_resources_allowance_keeps_code_and_identity_checks(self):
+        verifier=ROOT/'packaging/macos/python_trust.sh'
+        with tempfile.TemporaryDirectory() as directory:
+            candidate=Path(directory)/'candidate';framework=Path(directory)/'Python'
+            candidate.write_text('#!/bin/bash\nexit 0\n');candidate.chmod(0o755)
+            framework.write_text('mock framework')
+            script='source "$1"\n# Framework verification must permit added resources; executable must not.\nmaxbem_codesign() {\n  if [[ "$1" == --display ]]; then\n    printf \'%s\\n\' \'TeamIdentifier=BMM5U3QVKW\' \'Authority=Developer ID Application: Python Software Foundation (BMM5U3QVKW)\'\n  elif [[ "${@: -1}" == "$FRAMEWORK" ]]; then\n    [[ "$*" == *--ignore-resources* ]]\n  else\n    [[ "$*" != *--ignore-resources* ]]\n  fi\n}\nFRAMEWORK="$3"\nmaxbem_verify_candidate "$2" "$3" || exit 1\nmaxbem_codesign() { return 1; }\nif maxbem_verify_candidate "$2" "$3"; then exit 2; fi\nmaxbem_codesign() {\n  if [[ "$1" == --display ]]; then printf \'%s\\n\' \'TeamIdentifier=WRONG\'; else return 0; fi\n}\nif maxbem_verify_candidate "$2" "$3"; then exit 3; fi\n'
+            subprocess.run(['bash','-euo','pipefail','-c',script,'test',str(verifier),str(candidate),str(framework)],check=True)
+
     def test_11_runtime_selection_falls_back_and_fails_closed(self):
         verifier=ROOT/'packaging/macos/python_trust.sh'
         script='source "$1"\nmaxbem_verify_candidate() { [[ "$1" == */3.13/bin/python3.13 ]]; }\nmaxbem_verify_python || exit 1\n[[ "$MAXBEM_PYTHON" == /Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13 ]] || exit 2\nmaxbem_verify_candidate() { return 1; }\nif maxbem_verify_python; then exit 3; fi\n[[ -z "$MAXBEM_PYTHON" ]] || exit 4\n'
