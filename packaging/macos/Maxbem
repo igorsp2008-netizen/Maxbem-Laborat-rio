@@ -1,0 +1,11 @@
+#!/bin/bash
+set -euo pipefail
+umask 077
+CONTENTS="$(cd "$(dirname "$0")/.." && pwd -P)"
+BUNDLE="$(dirname "$CONTENTS")"
+RESOURCES="$CONTENTS/Resources"
+if ! (cd "$BUNDLE" && /usr/bin/shasum -a 256 -c Contents/Resources/INSTALLED_SHA256SUMS >/dev/null 2>&1); then
+  /usr/bin/osascript -e 'display alert "Maxbem: verificação falhou" message "A instalação está incompleta ou foi alterada. Reinstale usando o pacote original; não ignore a verificação." as critical' >/dev/null
+  exit 1
+fi
+exec "$RESOURCES/runtime/python/bin/python3.14" -I -B "$RESOURCES/mac_launcher.py"

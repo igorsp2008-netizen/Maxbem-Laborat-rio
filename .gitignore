@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.cache/
+interface-validada.png
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+launch.json
