@@ -12,5 +12,7 @@ fi
 printf 'Restaurar o backup, preservando a cópia anterior? Digite SIM: '
 read -r CONFIRM
 [[ "$CONFIRM" == SIM ]] || exit 0
-"$APP/Contents/Resources/runtime/python/bin/python3.14" -I -B "$APP/Contents/Resources/app/server.py" --restore "$BACKUP"
+source "$APP/Contents/Resources/python_trust.sh"
+maxbem_verify_python || { echo "Runtime oficial indisponível. Execute o novo instalador."; exit 1; }
+"$MAXBEM_PYTHON" -I -B "$APP/Contents/Resources/app/server.py" --restore "$BACKUP"
 echo 'Restauração concluída. Abra o aplicativo pelo ícone.'

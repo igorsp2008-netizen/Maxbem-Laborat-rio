@@ -1,4 +1,4 @@
-"""Instalação sem sudo; preserva banco, gera ícone Mac e instala runtime da arquitetura escolhida."""
+"""Instalação sem sudo; preserva banco, gera ícone Mac usando o runtime oficial verificado."""
 import fcntl
 import hashlib
 import os
@@ -6,7 +6,6 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-import tarfile
 import tempfile
 
 APP_NAME='Maxbem Laboratório.app'
@@ -53,8 +52,6 @@ def main(root):
         try:
             shutil.copytree(root/APP_NAME,staged)
             resources=staged/'Contents/Resources'
-            runtime=resources/'runtime';runtime.mkdir()
-            with tarfile.open(root/'runtime.tar.gz') as archive:archive.extractall(runtime,filter='data')
             icon(resources)
             (staged/'Contents/MacOS/Maxbem').chmod(0o755)
             manifest(staged)
@@ -81,4 +78,4 @@ def main(root):
 
 if __name__=='__main__':
     try:main(sys.argv[1])
-    except (OSError,ValueError,tarfile.TarError,subprocess.SubprocessError) as error:raise SystemExit('Instalação não concluída: '+str(error))
+    except (OSError,ValueError,subprocess.SubprocessError) as error:raise SystemExit('Instalação não concluída: '+str(error))

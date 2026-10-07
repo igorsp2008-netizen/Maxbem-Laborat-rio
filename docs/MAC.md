@@ -1,12 +1,11 @@
-# Maxbem para Mac — 2.2
+# Maxbem para Mac — 2.3
 
-Dois pacotes estão disponíveis: **Apple Silicon** (M1/M2/M3/M4 e posteriores, arquitetura arm64, macOS 11+) e **Intel** (x86_64, macOS 10.15+). Ambos incluem CPython 3.14.8 distribuído pelo projeto Astral `python-build-standalone`. Não é preciso instalar Python, Homebrew ou bibliotecas; não há downloads durante a instalação.
-
+Um pacote **universal 2.3** atende Apple Silicon e Intel, com macOS 11+. A versão usa Python 3.14.8+ da Python Software Foundation em `/Library/Frameworks/Python.framework/Versions/3.14`. Se ele não estiver instalado e verificado, o script baixa o instalador oficial por HTTPS, verifica sua assinatura e aprovação do macOS, e abre a janela nativa. A primeira instalação exige internet e pode exigir uma conta administradora; depois o app funciona offline. Não é necessário baixar Python manualmente.
 ## Instalar e criar o ícone
 
-1. Baixe o ZIP adequado ao processador. Consulte o menu Apple → Sobre Este Mac: `Chip` identifica Apple Silicon; `Processador Intel` identifica Intel.
+1. Baixe `Maxbem_Mac_Universal_v2_3.zip` e extraia em uma pasta nova; não misture com o pacote 2.2.
 2. Extraia todo o ZIP no Finder. Não execute arquivos de dentro do ZIP.
-3. Abra `Instalar Maxbem.command`. O script verifica os hashes, instala o aplicativo e seu runtime em **`~/Applications/Maxbem Laboratório.app`**, gera um ícone `.icns` a partir do logotipo e cria o ícone na Área de Trabalho. Não usa sudo nem modifica o Python do sistema.
+3. Abra `Instalar Maxbem.command`. O script verifica os hashes, instala o aplicativo em **`~/Applications/Maxbem Laboratório.app`**, gera um ícone `.icns` a partir do logotipo e cria o ícone na Área de Trabalho. Quando solicitado, conclua primeiro a instalação oficial do Python na janela do macOS. Digite a senha do Mac somente nessa janela nativa. O script não captura essa senha. O Python oficial fica disponível para outros aplicativos; o Python interno do sistema não é substituído.
 4. O navegador padrão abre o cadastro do primeiro administrador. Crie uma senha exclusiva com pelo menos 12 caracteres.
 5. Revise o painel de análises e os critérios com a responsável técnica antes de emitir laudos.
 
@@ -31,14 +30,16 @@ O macOS pode pedir permissão do Terminal para criar o ícone na Área de Trabal
 
 No menu Backup, uma base antiga `store.json` ou uma exportação JSON pode ser importada **somente em banco sem amostras**. Copie a origem antes. Senhas antigas não são importadas; liberações antigas exigem revisão. Dados sintéticos validaram a migração; nenhuma base real foi fornecida.
 
-Para restaurar uma cópia integral SQLite, encerre o aplicativo e abra `Restaurar backup.command`, que solicita o arquivo e uma confirmação. A cópia atual é preservada. Para senha administrativa esquecida, use `Recuperar administrador.command` com o servidor encerrado; a senha é solicitada no terminal e a operação é auditada. Ambos usam o runtime instalado, sem Python externo.
+Para restaurar uma cópia integral SQLite, encerre o aplicativo e abra `Restaurar backup.command`, que solicita o arquivo e uma confirmação. A cópia atual é preservada. Para senha administrativa esquecida, use `Recuperar administrador.command` com o servidor encerrado; a senha é solicitada no terminal e a operação é auditada. Ambos verificam e usam o Python oficial instalado.
 
-Para remover, encerre o servidor e execute `Desinstalar preservando dados.command` do pacote extraído. Ele remove o aplicativo e somente o atalho que aponta para ele, preservando banco, backups e a instalação anterior arquivada. Mantenha o ZIP para recuperação/reinstalação.
+Para remover, encerre o servidor e execute `Desinstalar preservando dados.command` do pacote extraído. Ele remove o aplicativo e somente o atalho que aponta para ele, preservando banco, backups, Python oficial e a instalação anterior arquivada. Mantenha o ZIP para recuperação/reinstalação.
 
 ## Segurança e compatibilidade
 
 Login e permissões são verificados no servidor; senhas usam PBKDF2 com salt; mutações exigem sessão e CSRF. As gravações são transacionais, edições usam revisão e amostras liberadas são imutáveis. Os critérios da análise são preservados no laudo. A saída Excel é CSV; etiqueta usa impressão pelo navegador. Documentos não equivalem a assinatura digital ou certificação legal automática.
 
-O ZIP e a instalação usam manifestos SHA-256. Isso detecta corrupção e alteração dos arquivos declarados, mas não prova a autenticidade se alguém alterar também o manifesto. Runtimes foram verificados contra SHA-256 publicado pelo projeto fornecedor via HTTPS. Não há assinatura Developer ID do Maxbem. Banco, backups e auditoria não são criptografados e não resistem a alguém com controle da sua conta ou do sistema; use contas separadas, FileVault e cópias externas protegidas.
+O ZIP e a instalação usam manifestos SHA-256. Isso detecta corrupção e alteração dos arquivos declarados, mas não prova a autenticidade se alguém alterar também o manifesto. O instalador oficial baixado é validado por `pkgutil` e `spctl`; executáveis precisam passar por `codesign`, com identidade da Python Software Foundation. Não há assinatura Developer ID do Maxbem. Banco, backups e auditoria não são criptografados e não resistem a alguém com controle da sua conta ou do sistema; use contas separadas, FileVault e cópias externas protegidas.
 
-**Validação disponível:** servidor, interface em Chromium, identidade da instância, arquivo privado e encerramento autenticado foram testados no Linux. Arquitetura e requisitos mínimos dos binários Mac foram inspecionados e seus hashes verificados. **O runtime macOS, o Finder/Gatekeeper, a instalação, o ícone gerado por `sips/iconutil` e a impressão física ainda precisam ser testados em Macs reais de ambas as arquiteturas.** Não considere a entrega homologada em macOS apenas porque os testes Linux passaram.
+**Correção do erro `Killed: 9`:** o runtime portátil do pacote 2.2 foi substituído pelo instalador oficial assinado. Seus hashes e páginas de assinatura estavam íntegros, mas isso não confirmou a causa do encerramento no Mac. O pacote novo registra a etapa da falha e mantém o Terminal aberto para copiar o erro.
+
+**Validação disponível:** testes portáveis do servidor e das adaptações Mac executados no Linux; ZIP e manifestos verificados. O ambiente cloud não permitiu baixar o instalador de python.org. O download, a validação das assinaturas, o Finder/Gatekeeper, a instalação e o ícone ainda precisam de teste em um Mac real. A aplicação Maxbem continua sem Developer ID/notarização; o runtime oficial não assina o aplicativo Maxbem.

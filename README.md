@@ -4,12 +4,11 @@ Aplicativo local de controle laboratorial de mel, reescrito com Python, SQLite e
 
 ## Mac — download e instalação
 
-- [Apple Silicon: instalador com Python incluído](downloads/Maxbem_Mac_AppleSilicon_v2_2.zip) — macOS 11+, arm64.
-- [Intel: instalador com Python incluído](downloads/Maxbem_Mac_Intel_v2_2.zip) — macOS 10.15+, x86_64.
+- [Mac universal 2.3: Apple Silicon e Intel](downloads/Maxbem_Mac_Universal_v2_3.zip) — macOS 11+.
 - [Guia de instalação, ícone, dados e recuperação](docs/MAC.md).
 - [Segurança e limites da versão Mac](docs/RELATORIO_MAC.md).
 
-Extraia o ZIP e execute **Instalar Maxbem.command**. O aplicativo fica em `~/Applications/Maxbem Laboratório.app`, com ícone na Área de Trabalho. Não precisa instalar Python. O banco fica separado em `~/Library/Application Support/MaxbemLaboratorio/Dados`.
+Extraia o ZIP e execute **Instalar Maxbem.command**. O aplicativo fica em `~/Applications/Maxbem Laboratório.app`, com ícone na Área de Trabalho. Na primeira instalação, o script baixa e verifica o instalador oficial assinado do Python; conclua a janela de instalação do macOS. Exige internet e pode solicitar autorização administrativa nessa janela. Depois, funciona offline. O banco fica separado em `~/Library/Application Support/MaxbemLaboratorio/Dados`.
 
 **A versão Mac não tem Developer ID/notarização e ainda precisa de homologação em Macs reais.** Os testes do servidor e do navegador foram executados no Linux. O guia explica as opções normais do Gatekeeper sem desativar proteções globais.
 
@@ -25,13 +24,13 @@ python3 -I -B -m unittest discover -s tests -v
 
 O cadastro administrativo abre no primeiro uso; não existe senha padrão. Não compartilhe a URL temporária de abertura. O teste de navegador em `app/tests/browser_smoke.py` requer Playwright e Chromium, apenas para desenvolvimento.
 
-Gerar pacotes Mac com os runtimes fixados e checksums verificados:
+Gerar pacote Mac com manifestos de integridade:
 
 ```sh
-python3 tools/build_macos.py --arch all
+python3 tools/build_macos.py
 ```
 
-Os arquivos necessários são baixados do projeto Astral via HTTPS para `.cache/runtimes`; o instalador entregue ao usuário já inclui tudo e não faz downloads. O ambiente de geração pode ser Linux; isso não substitui testar os binários em Macs reais. O logo é convertido em ícone `.icns` na instalação usando `sips/iconutil` do macOS.
+O pacote 2.3 substitui o runtime portátil que foi encerrado com `Killed: 9` no Mac do usuário. Usa o Python universal oficial, valida assinatura PSF e aprovação do Gatekeeper antes de abrir seu instalador e verifica o runtime antes de executá-lo. A causa exata do encerramento anterior não foi confirmada. A geração pode ocorrer no Linux; instalação e assinatura precisam ser verificadas em um Mac real. O logo é convertido em `.icns` usando `sips/iconutil` na instalação.
 
 ## Histórico Windows
 

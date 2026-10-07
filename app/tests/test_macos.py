@@ -107,6 +107,30 @@ class MacPortableTests(unittest.TestCase):
                     with self.assertRaisesRegex(SystemExit,'Encerre'):installer.main(home/'package')
             self.assertFalse((home/'Applications').exists())
 
+    def test_10_install_update_preserves_database_and_prior_app(self):
+        with tempfile.TemporaryDirectory() as directory:
+            home=Path(directory);root=home/'package'
+            bundle=root/installer.APP_NAME
+            (bundle/'Contents/MacOS').mkdir(parents=True)
+            (bundle/'Contents/Resources').mkdir()
+            (bundle/'Contents/MacOS/Maxbem').write_text('#!/bin/bash\n')
+            (home/'Desktop').mkdir()
+            data=home/'Library/Application Support/MaxbemLaboratorio/Dados'
+            data.mkdir(parents=True);db=data/'maxbem.sqlite3';db.write_bytes(b'preserve-user-data')
+            def generate_icon(resources): (resources/'Maxbem.icns').write_bytes(b'test-icon')
+            with patch('sys.platform','darwin'),patch('pathlib.Path.home',return_value=home),patch.object(installer,'icon',side_effect=generate_icon),patch.object(installer.subprocess,'run'):
+                installer.main(root)
+                target=home/'Applications'/installer.APP_NAME
+                self.assertTrue((home/'Desktop'/installer.APP_NAME).is_symlink())
+                self.assertIn('Maxbem.icns',(target/'Contents/Resources/INSTALLED_SHA256SUMS').read_text())
+                (target/'prior-marker').write_text('prior')
+                installer.main(root)
+                previous=home/'Applications'/(installer.APP_NAME+'.anterior')
+                self.assertEqual((previous/'prior-marker').read_text(),'prior')
+                with self.assertRaisesRegex(SystemExit,'já foi preservada'):installer.main(root)
+                self.assertTrue(target.exists())
+            self.assertEqual(db.read_bytes(),b'preserve-user-data')
+
     def test_09_real_cli_private_file_no_tokens_in_log(self):
         with tempfile.TemporaryDirectory() as directory:
             path=Path(directory);lease=path/'launch.json';log=path/'server.log'

@@ -8,4 +8,9 @@ if ! (cd "$BUNDLE" && /usr/bin/shasum -a 256 -c Contents/Resources/INSTALLED_SHA
   /usr/bin/osascript -e 'display alert "Maxbem: verificação falhou" message "A instalação está incompleta ou foi alterada. Reinstale usando o pacote original; não ignore a verificação." as critical' >/dev/null
   exit 1
 fi
-exec "$RESOURCES/runtime/python/bin/python3.14" -I -B "$RESOURCES/mac_launcher.py"
+source "$RESOURCES/python_trust.sh"
+if ! maxbem_verify_python; then
+  /usr/bin/osascript -e 'display alert "Maxbem: runtime indisponível" message "Execute o novo Instalar Maxbem.command para instalar ou validar o Python oficial assinado. Nenhum banco foi apagado." as critical' >/dev/null
+  exit 1
+fi
+exec "$MAXBEM_PYTHON" -I -B "$RESOURCES/mac_launcher.py"

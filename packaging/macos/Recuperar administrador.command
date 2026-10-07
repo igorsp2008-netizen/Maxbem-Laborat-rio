@@ -7,4 +7,6 @@ if ! (cd "$APP" && /usr/bin/shasum -a 256 -c Contents/Resources/INSTALLED_SHA256
   exit 1
 fi
 echo 'Encerre o aplicativo antes de recuperar a conta. A operação será auditada.'
-"$APP/Contents/Resources/runtime/python/bin/python3.14" -I -B "$APP/Contents/Resources/app/server.py" --reset-admin
+source "$APP/Contents/Resources/python_trust.sh"
+maxbem_verify_python || { echo "Runtime oficial indisponível. Execute o novo instalador."; exit 1; }
+"$MAXBEM_PYTHON" -I -B "$APP/Contents/Resources/app/server.py" --reset-admin

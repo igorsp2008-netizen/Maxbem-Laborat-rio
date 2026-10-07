@@ -11,8 +11,6 @@ if ! (cd "$APP" && /usr/bin/shasum -a 256 -c Contents/Resources/INSTALLED_SHA256
   echo 'Instalação ausente ou alterada. Não foi removido nenhum arquivo.'
   exit 1
 fi
-# Usa uma cópia privada do runtime para poder remover a instalação inteira com segurança.
-TMP="$(mktemp -d "${TMPDIR:-/tmp}/maxbem-desinstalar.XXXXXX")"
-trap 'rm -rf "$TMP"' EXIT
-/usr/bin/ditto "$APP/Contents/Resources/runtime/python" "$TMP/python"
-"$TMP/python/bin/python3.14" -I -B "$ROOT/uninstall_macos.py"
+source "$APP/Contents/Resources/python_trust.sh"
+maxbem_verify_python || { echo 'Runtime oficial indisponível. Execute o novo instalador.'; exit 1; }
+"$MAXBEM_PYTHON" -I -B "$ROOT/uninstall_macos.py"
