@@ -107,6 +107,11 @@ class MacPortableTests(unittest.TestCase):
                     with self.assertRaisesRegex(SystemExit,'Encerre'):installer.main(home/'package')
             self.assertFalse((home/'Applications').exists())
 
+    def test_11_runtime_selection_falls_back_and_fails_closed(self):
+        verifier=ROOT/'packaging/macos/python_trust.sh'
+        script='source "$1"\nmaxbem_verify_candidate() { [[ "$1" == */3.13/bin/python3.13 ]]; }\nmaxbem_verify_python || exit 1\n[[ "$MAXBEM_PYTHON" == /Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13 ]] || exit 2\nmaxbem_verify_candidate() { return 1; }\nif maxbem_verify_python; then exit 3; fi\n[[ -z "$MAXBEM_PYTHON" ]] || exit 4\n'
+        subprocess.run(['bash','-euo','pipefail','-c',script,'test',str(verifier)],check=True)
+
     def test_10_install_update_preserves_database_and_prior_app(self):
         with tempfile.TemporaryDirectory() as directory:
             home=Path(directory);root=home/'package'

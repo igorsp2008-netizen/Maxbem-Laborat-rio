@@ -16,15 +16,15 @@ def digest(path):
 
 def build(outdir):
     outdir=Path(outdir);outdir.mkdir(parents=True,exist_ok=True)
-    folder='Maxbem_Mac_Universal_v2_3'
+    folder='Maxbem_Mac_Universal_v2_4'
     with tempfile.TemporaryDirectory(prefix='maxbem-mac-build-') as directory:
         package=Path(directory)/folder;package.mkdir()
         bundle=package/APP_NAME
         contents=bundle/'Contents';resources=contents/'Resources';(contents/'MacOS').mkdir(parents=True);resources.mkdir()
         (contents/'Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier':'com.maxbem.laboratorio',
             'CFBundleName':'Maxbem Laboratório','CFBundleDisplayName':'Maxbem Laboratório',
-            'CFBundleExecutable':'Maxbem','CFBundlePackageType':'APPL','CFBundleShortVersionString':'2.3.0',
-            'CFBundleVersion':'230','CFBundleIconFile':'Maxbem.icns','LSUIElement':True,
+            'CFBundleExecutable':'Maxbem','CFBundlePackageType':'APPL','CFBundleShortVersionString':'2.4.0',
+            'CFBundleVersion':'240','CFBundleIconFile':'Maxbem.icns','LSUIElement':True,
             'LSMinimumSystemVersion':'11.0','NSHighResolutionCapable':True}))
         shutil.copy2(MAC/'Maxbem',contents/'MacOS/Maxbem');(contents/'MacOS/Maxbem').chmod(0o755)
         shutil.copy2(MAC/'mac_launcher.py',resources/'mac_launcher.py')

@@ -29,8 +29,13 @@ if ! maxbem_verify_python; then
   chmod 700 "$CACHE"
   PKG="$CACHE/python-3.14.8-macos11.pkg"
   PARTIAL="$(mktemp "$CACHE/download.XXXXXX")"
-  /usr/bin/curl --fail --location --show-error --proto '=https' --proto-redir '=https' --tlsv1.2 --connect-timeout 20 --max-time 600 --retry 2 \
-    'https://www.python.org/ftp/python/3.14.8/python-3.14.8-macos11.pkg' --output "$PARTIAL"
+  if ! /usr/bin/curl --fail --location --show-error --proto '=https' --proto-redir '=https' --tlsv1.2 --connect-timeout 20 --max-time 600 --retry 2 \
+    'https://www.python.org/ftp/python/3.14.8/python-3.14.8-macos11.pkg' --output "$PARTIAL"; then
+    echo 'Não foi possível acessar www.python.org. Verifique a conexão ou tente outra rede.'
+    echo 'Se você já instalou Python, execute no Terminal: /usr/bin/find /Library/Frameworks/Python.framework/Versions -maxdepth 3 -name "python3*"'
+    echo 'Copie a saída para o suporte; não é necessário desativar as proteções do Mac.'
+    false
+  fi
   STAGE='assinatura e aprovação do pacote oficial pelo macOS'
   echo "Etapa: $STAGE"
   SIGNATURE="$(/usr/sbin/pkgutil --check-signature "$PARTIAL")"
@@ -55,6 +60,7 @@ if ! maxbem_verify_python; then
     false
   fi
 fi
+echo "Python oficial verificado: $MAXBEM_PYTHON"
 STAGE='instalação do Maxbem e geração do ícone'
 echo "Etapa: $STAGE"
 "$MAXBEM_PYTHON" -I -B "$ROOT/install_macos.py" "$ROOT"
